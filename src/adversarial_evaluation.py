@@ -1,4 +1,3 @@
-# import argparse
 import json
 import os
 
@@ -97,69 +96,3 @@ def do_adversarial_evaluation(
     # Clean up the temporary files
     os.remove("adversarial_evaluation_original_metrics.json")
     os.remove("adversarial_evaluation_synthetic_metrics.json")
-
-
-# def main():
-#     parser = argparse.ArgumentParser(
-#         description="Segment original and synthetic slices and create adversarial evaluation report"
-#     )
-#     parser.add_argument(
-#         "--model_path",
-#         required=True,
-#         help="Path to model directory containing model_v7.json and weights_v7.hdf5",
-#     )
-#     parser.add_argument(
-#         "--original_data_path", required=True, help="Path to original data directory"
-#     )
-#     parser.add_argument(
-#         "--synthetic_data_path", required=True, help="Path to synthetic data directory"
-#     )
-#     parser.add_argument(
-#         "--segmentation_threshold",
-#         required=True,
-#         help="Segmentation threshold for the model",
-#     )
-#     args = parser.parse_args()
-
-#     # Batch segmentation in the original slices
-#     original_model = SegmentationModel(
-#         model_path=args.model_path,
-#         data_path=args.original_data_path,
-#         segmentation_threshold=args.segmentation_threshold,
-#         output_path=args.save_path,
-#         verbosity=True,
-#     )
-#     original_model.segment()
-
-#     # Batch segmentation in the synthetic slices
-#     synthetic_model = SegmentationModel(
-#         model_path=args.model_path,
-#         data_path=args.synthetic_data_path,
-#         segmentation_threshold=args.segmentation_threshold,
-#         output_path=args.save_path,
-#         verbosity=True,
-#     )
-#     synthetic_model.segment()
-
-#     # Creation of adversarial evaluation report
-#     with open("adversarial_evaluation_original_metrics.json", "r") as f:
-#         original_metrics = json.load(f)
-
-#     with open("adversarial_evaluation_synthetic_metrics.json", "r") as f:
-#         synthetic_metrics = json.load(f)
-
-#     metric_differences = calculate_metric_differences(
-#         original_metrics, synthetic_metrics
-#     )
-
-#     # Save the adversarial evaluation results
-#     with open("adversarial_evaluation_results.json", "w") as f:
-#         json.dump(metric_differences, f, indent=4)
-
-#     # Clean up the temporary files
-#     os.remove("adversarial_evaluation_original_metrics.json")
-#     os.remove("adversarial_evaluation_synthetic_metrics.json")
-
-
-# if __name__ == "__main__":
-#     main()

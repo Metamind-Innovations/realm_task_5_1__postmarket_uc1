@@ -1,4 +1,3 @@
-# import argparse
 import json
 import os
 from typing import List, Dict
@@ -229,57 +228,3 @@ def do_statistical_analysis(
 
     with open(statistical_analysis_results_path, "w") as f:
         json.dump(statistical_analysis_results, f)
-
-
-# def main():
-#     parser = argparse.ArgumentParser(
-#         description="Perform statistical analysis on DICOM series."
-#     )
-#     parser.add_argument(
-#         "--dicom-directory",
-#         type=str,
-#         default="sample_data",
-#         help="Directory containing DICOM files",
-#     )
-#     parser.add_argument(
-#         "--gap-threshold",
-#         type=float,
-#         default=1.5,
-#         help="Threshold for detecting gaps between slices",
-#     )
-#     parser.add_argument(
-#         "--statistical-analysis-results-path",
-#         type=str,
-#         default="statistical_analysis_results.json",
-#         help="Output path for statistical analysis results JSON",
-#     )
-#     args = parser.parse_args()
-
-#     dicom_directory = args.dicom_directory
-#     gap_threshold = args.gap_threshold
-#     statistical_analysis_results_path = args.statistical_analysis_results_path
-
-#     dicom_series = load_dicom_series(dicom_directory)
-
-#     gaps = missing_slice_detection(dicom_series, gap_threshold)
-
-#     dicom_header_consistency_results = dicom_header_consistency(dicom_series)
-
-#     image_consistency_results = image_dimension_consistency(dicom_series)
-
-#     statistical_analysis_results = {
-#         "information": (
-#             "This statistical analysis checks for missing slices, DICOM header consistency, and image dimension consistency in a DICOM series. "
-#             "It helps ensure the integrity of the image data and the consistency of the DICOM headers across the series."
-#         ),
-#         "missing_slices": gaps,
-#         "dicom_header_consistency": dicom_header_consistency_results,
-#         "image_dimension_consistency": image_consistency_results,
-#     }
-
-#     with open(statistical_analysis_results_path, "w") as f:
-#         json.dump(statistical_analysis_results, f)
-
-
-# if __name__ == "__main__":
-#     main()
