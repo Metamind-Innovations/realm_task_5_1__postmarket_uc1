@@ -34,7 +34,6 @@ class SegmentationModel:
         self.output_path = output_path
         self.segmentation_threshold = float(segmentation_threshold)
 
-        # Initialize data generator with explicit parameter names
         self.patient_generator = generator.Patient_data_generator(
             patient_dict=self.patient_dict,
             predict=True,
@@ -70,10 +69,8 @@ class SegmentationModel:
             print(f"Starting segmentation for volume of shape {input_volume.shape}...")
             timer_start = time.time()
 
-        # Initialize prediction array
         raw_predictions = np.zeros_like(input_volume)
 
-        # Process each slice
         for slice_idx in range(len(input_volume)):
             slice_prediction = self.model.predict(
                 input_volume[slice_idx, ...].reshape(-1, 512, 512, 1)
@@ -96,7 +93,6 @@ class SegmentationModel:
             processing_params["normalized_shape"], dtype=np.uint8
         )
 
-        # Calculate crop boundaries
         z_start, z_end = processing_params["z_st"], processing_params["z_end"]
         xy_start, xy_end = processing_params["xy_st"], processing_params["xy_end"]
 
@@ -109,7 +105,6 @@ class SegmentationModel:
                 processed_mask
             )
 
-        # Resize if necessary
         if reconstructed_volume.shape != processing_params["original_shape"]:
             return le.resize_3d_img(
                 reconstructed_volume,
@@ -124,7 +119,6 @@ class SegmentationModel:
         all_coronal = np.arange(segmentation_mask.shape[1])
         all_sagittal = np.arange(segmentation_mask.shape[2])
 
-        # Adjust for preprocessing crops
         if "z_st" in processing_params:
             all_axial -= processing_params["z_st"]
             all_axial = all_axial[(all_axial >= 0) & (all_axial < volume.shape[0])]
@@ -170,11 +164,9 @@ class SegmentationModel:
                         > 0.3
                     )
 
-                # No segmentation detected for this slice, skip
                 if np.sum(mask_slice) == 0:
                     continue
 
-                # Save original slice
                 plt.figure(figsize=(5, 5))
                 plt.imshow(ct_slice, cmap="bone")
                 plt.title(f"Original {plane.capitalize()} Slice")
@@ -185,14 +177,13 @@ class SegmentationModel:
                 plt.savefig(orig_path, bbox_inches="tight", dpi=100, pad_inches=0)
                 plt.close()
 
-                # Save segmented slice
                 masked_mask = np.ma.masked_where(mask_slice == 0, mask_slice)
                 plt.figure(figsize=(5, 5))
                 plt.imshow(ct_slice, cmap="bone")
                 plt.imshow(
                     masked_mask,
-                    cmap="Reds",  # Use red for tumor visualization
-                    alpha=0.7,  # Increase opacity
+                    cmap="Reds",
+                    alpha=0.7,
                     norm=plt.Normalize(vmin=0, vmax=1),
                 )
                 plt.title(f"Tumor Segmentation - {plane.capitalize()} Slice")
@@ -213,7 +204,6 @@ class SegmentationModel:
     ):
         """Save segmentation results and original image to NRRD format."""
 
-        # Extract the first path from the list if source_file_path is a list
         if isinstance(source_file_path, list):
             source_file_path = source_file_path[0]
 
@@ -221,13 +211,11 @@ class SegmentationModel:
         output_dir = Path(self.output_path) / f"{patient_id}_(DL)"
         output_dir.mkdir(parents=True, exist_ok=True)
 
-        # Save segmentation mask
         sitk_mask = sitk.GetImageFromArray(segmentation_mask)
         sitk_mask.SetSpacing(processing_params["original_spacing"])
         sitk_mask.SetOrigin(processing_params["img_origin"])
         sitk.WriteImage(sitk_mask, os.path.join(output_dir, "DL_mask.nrrd"))
 
-        # Save original image
         original_image = sitk.ReadImage(source_file_path)
         sitk.WriteImage(original_image, os.path.join(output_dir, "image.nrrd"))
 
@@ -235,7 +223,6 @@ class SegmentationModel:
             volume_array, segmentation_mask, processing_params
         )
 
-        # Generate segmentation figures
         self._generate_segmentation_figures(
             volume_array,
             [axial_slices, coronal_slices, sagittal_slices],
@@ -264,7 +251,7 @@ class SegmentationModel:
         total_elements = y_pred.sum() + y_true.sum()
 
         if total_elements == 0:
-            return 1.0  # Both volumes are empty
+            return 1.0
 
         return (2.0 * intersection) / total_elements
 
@@ -280,13 +267,11 @@ class SegmentationModel:
             processing_params: Dictionary containing reconstruction parameters
             output_dir: Directory to save the visualization images
         """
-        # Ensure output directory exists
         output_dir = Path(output_dir) / "ground_truth_visualization"
         output_dir.mkdir(parents=True, exist_ok=True)
 
         all_axial = np.arange(ground_truth_mask.shape[0])
 
-        # Adjust for preprocessing crops
         if "z_st" in processing_params:
             all_axial -= processing_params["z_st"]
             all_axial = all_axial[(all_axial >= 0) & (all_axial < volume.shape[0])]
@@ -300,24 +285,19 @@ class SegmentationModel:
             ct_slice = volume[idx, :, :]
             mask_slice = ground_truth_mask[idx, :, :]
 
-            # No segmentation detected for this slice, skip
             if np.sum(mask_slice) == 0:
                 continue
 
-            # Create figure with specific size
             plt.figure(figsize=(10, 5))
 
-            # Plot original slice
             plt.subplot(1, 2, 1)
             plt.imshow(ct_slice, cmap="bone")
             plt.title(f"Original Slice {idx}")
             plt.axis("off")
 
-            # Plot overlay
             plt.subplot(1, 2, 2)
             plt.imshow(ct_slice, cmap="bone")
 
-            # Create mask overlay (green color)
             masked_mask = np.ma.masked_where(mask_slice == 0, mask_slice)
             plt.imshow(
                 masked_mask,
@@ -328,10 +308,8 @@ class SegmentationModel:
             plt.title(f"Ground Truth Overlay - Slice {idx}")
             plt.axis("off")
 
-            # Adjust layout to prevent overlap
             plt.tight_layout()
 
-            # Save figure
             plt.savefig(
                 output_dir / f"ground_truth_slice_{idx:03d}.png",
                 bbox_inches="tight",
@@ -355,7 +333,6 @@ class SegmentationModel:
             ground_truth = np.squeeze(ground_truth_mask[0])
             processing_params = params[0]
 
-            # Visualize ground truth
             if self.output_path is not None:
                 if isinstance(file_path, list):
                     patient_id = Path(file_path[0]).parent.name

@@ -16,7 +16,7 @@ This repository implements a comprehensive post-market evaluation pipeline for s
 
 Key Components:
 
-- **Expert Knowledge Evaluation**: Performs anatomical feasibility checks on CT slices using Otsu's thresholding to verify that lung areas appear within the patient's body and are properly enclosed by surrounding tissue. The analysis generates visual reports and identifies valid/invalid slices based on this anatomical criterion.
+- **Expert Knowledge Evaluation**: Performs anatomical feasibility checks on CT slices using Otsu's thresholding to verify that lung areas appear within the patient's body and are properly enclosed by surrounding tissue. The analysis generates visual reports and identifies valid/invalid slices based on this anatomical criterion. We base our analysis on the paper "Introducing SPINE: A Holistic Approach to Synthetic Pulmonary Imaging Evaluation Through End-to-End Data and Model Management" by Ntampakis et al. (2024) where Otsu's thresholding is used to identify lung areas within the patient's thoracic cavity.
 
 - **Statistical Analysis**: Conducts thorough DICOM series validation by:
   - Detecting missing or inconsistent slice spacing
