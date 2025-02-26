@@ -91,7 +91,6 @@ def dicom_header_consistency(dicom_series: List[pydicom.dataset.FileDataset]) ->
         "inconsistent_headers": {},
     }
 
-    # Check for missing headers
     for header in essential_headers:
         missing_in_slices = []
         for idx, dcm in enumerate(dicom_series):
@@ -102,7 +101,6 @@ def dicom_header_consistency(dicom_series: List[pydicom.dataset.FileDataset]) ->
                 missing_in_slices
             )
 
-    # Check for consistency where expected
     for header in consistent_headers:
         if header in dicom_header_consistency_results["missing_headers"]:
             continue
@@ -113,7 +111,6 @@ def dicom_header_consistency(dicom_series: List[pydicom.dataset.FileDataset]) ->
             continue
 
         if header == "ImageOrientationPatient":
-            # Convert numpy arrays to tuples for comparison
             values = [tuple(val) for val in values]
 
         if len(set(str(v) for v in values)) > 1:
@@ -122,7 +119,6 @@ def dicom_header_consistency(dicom_series: List[pydicom.dataset.FileDataset]) ->
                 "message": f"Found {len(set(str(v) for v in values))} different values",
             }
 
-    # Special check for ImagePositionPatient
     if (
         "ImagePositionPatient"
         not in dicom_header_consistency_results["missing_headers"]
@@ -165,7 +161,6 @@ def image_dimension_consistency(
         "is_consistent": True,
     }
 
-    # Check image dimensions
     rows = set()
     columns = set()
     for dcm in dicom_series:
@@ -178,7 +173,6 @@ def image_dimension_consistency(
         "is_consistent": len(rows) == 1 and len(columns) == 1,
     }
 
-    # Check pixel spacing
     pixel_spacing = []
     for dcm in dicom_series:
         if hasattr(dcm, "PixelSpacing"):

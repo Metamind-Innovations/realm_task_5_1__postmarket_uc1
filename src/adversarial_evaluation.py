@@ -56,7 +56,6 @@ def do_adversarial_evaluation(
         original_save_path = None
         synthetic_save_path = None
 
-    # Batch segmentation in the original slices
     original_model = SegmentationModel(
         model_path=model_path,
         data_path=original_data_path,
@@ -67,7 +66,6 @@ def do_adversarial_evaluation(
     )
     original_model.segment()
 
-    # Batch segmentation in the synthetic slices
     synthetic_model = SegmentationModel(
         model_path=model_path,
         data_path=synthetic_data_path,
@@ -78,7 +76,6 @@ def do_adversarial_evaluation(
     )
     synthetic_model.segment()
 
-    # Creation of adversarial evaluation report
     with open("adversarial_evaluation_original_metrics.json", "r") as f:
         original_metrics = json.load(f)
 
@@ -89,10 +86,8 @@ def do_adversarial_evaluation(
         original_metrics, synthetic_metrics
     )
 
-    # Save the adversarial evaluation results
     with open("adversarial_evaluation_results.json", "w") as f:
         json.dump(metric_differences, f, indent=4)
 
-    # Clean up the temporary files
     os.remove("adversarial_evaluation_original_metrics.json")
     os.remove("adversarial_evaluation_synthetic_metrics.json")

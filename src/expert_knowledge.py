@@ -66,20 +66,16 @@ def anatomical_feasibilty_check(
                 invalid_slices.append(idx)
                 continue
 
-        # Normalization
         img = img.astype(float)
         if img.max() > 0:
             img = (img - img.min()) / (img.max() - img.min())
 
-        # Otsu's thresholding
         thresh = threshold_otsu(img)
-        binary = img < thresh  # Dark regions (potential lungs) are True
+        binary = img < thresh
 
-        # Label connected components in the binary image
         labeled_array, _ = measure.label(binary, return_num=True)
         regions = measure.regionprops(labeled_array)
 
-        # Filter regions by size to identify potential lung regions
         total_area = img.shape[0] * img.shape[1]
         min_area = total_area * min_valid_area_ratio
         max_area = total_area * max_valid_area_ratio
@@ -88,7 +84,6 @@ def anatomical_feasibilty_check(
             region for region in regions if min_area < region.area < max_area
         ]
 
-        # Check if potential lung regions are enclosed by body
         valid_regions = []
         if len(lung_candidates) >= 1:
             for lung in lung_candidates:
@@ -105,11 +100,9 @@ def anatomical_feasibilty_check(
                 region_mask = labeled_array == lung.label
                 filled_region = ndimage.binary_fill_holes(region_mask)
 
-                # Create a dilated version of the filled region to get outer neighboring pixels
                 outer_region = ndimage.binary_dilation(filled_region) & ~filled_region
                 outer_coords = np.where(outer_region)
 
-                # Check if region is properly enclosed by lighter tissue
                 darker_neighbors_ratio = np.mean(img[outer_coords] < thresh)
                 if darker_neighbors_ratio > darker_neighbors_threshold:
                     continue
@@ -123,12 +116,10 @@ def anatomical_feasibilty_check(
 
             _, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
 
-            # Plot original image
             ax1.imshow(img, cmap="gray")
             ax1.set_title(f"Original Slice {idx}")
             ax1.axis("off")
 
-            # Plot image with valid regions
             visualization_mask = np.zeros_like(img, dtype=bool)
             ax2.imshow(img, cmap="gray")
 
