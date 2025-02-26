@@ -1,0 +1,159 @@
+{
+    "expert_knowledge_evaluation": {
+        "information": "Lungs in humans are expected to be within the examined person's body. In CT scans, lung areas appear darker than the surrounding body tissues. Based on (Ntampakis, et al., 2024), Otsu's thresholding method can be used to make a distinction between lungs and the surrounding areas to verify that identified lung areas are surrounded by body tissue.",
+        "Valid Slices": [
+            "1-020.dcm",
+            "1-021.dcm",
+            "1-022.dcm",
+            "1-023.dcm",
+            "1-024.dcm",
+            "1-025.dcm",
+            "1-026.dcm",
+            "1-027.dcm",
+            "1-028.dcm",
+            "1-029.dcm",
+            "1-030.dcm",
+            "1-031.dcm",
+            "1-032.dcm",
+            "1-033.dcm",
+            "1-034.dcm",
+            "1-035.dcm",
+            "1-036.dcm",
+            "1-037.dcm",
+            "1-038.dcm",
+            "1-039.dcm",
+            "1-040.dcm",
+            "1-041.dcm",
+            "1-042.dcm",
+            "1-043.dcm",
+            "1-044.dcm",
+            "1-045.dcm",
+            "1-046.dcm",
+            "1-047.dcm",
+            "1-049.dcm",
+            "1-050.dcm",
+            "1-051.dcm",
+            "1-052.dcm",
+            "1-053.dcm",
+            "1-054.dcm",
+            "1-055.dcm",
+            "1-056.dcm",
+            "1-057.dcm",
+            "1-058.dcm",
+            "1-059.dcm",
+            "1-060.dcm",
+            "1-061.dcm",
+            "1-062.dcm",
+            "1-063.dcm",
+            "1-064.dcm",
+            "1-065.dcm",
+            "1-066.dcm",
+            "1-067.dcm",
+            "1-068.dcm",
+            "1-069.dcm",
+            "1-070.dcm",
+            "1-071.dcm",
+            "1-072.dcm",
+            "1-073.dcm",
+            "1-074.dcm",
+            "1-075.dcm",
+            "1-076.dcm",
+            "1-077.dcm",
+            "1-078.dcm",
+            "1-079.dcm",
+            "1-080.dcm",
+            "1-081.dcm",
+            "1-082.dcm",
+            "1-083.dcm",
+            "1-084.dcm",
+            "1-085.dcm",
+            "1-086.dcm"
+        ],
+        "Invalid Slices": [
+            "1-001.dcm",
+            "1-002.dcm",
+            "1-003.dcm",
+            "1-004.dcm",
+            "1-005.dcm",
+            "1-006.dcm",
+            "1-007.dcm",
+            "1-008.dcm",
+            "1-009.dcm",
+            "1-010.dcm",
+            "1-011.dcm",
+            "1-012.dcm",
+            "1-013.dcm",
+            "1-014.dcm",
+            "1-015.dcm",
+            "1-016.dcm",
+            "1-018.dcm",
+            "1-019.dcm",
+            "1-087.dcm",
+            "1-088.dcm",
+            "1-089.dcm",
+            "1-090.dcm",
+            "1-091.dcm",
+            "1-092.dcm",
+            "1-093.dcm",
+            "1-094.dcm",
+            "1-096.dcm",
+            "1-097.dcm",
+            "1-098.dcm",
+            "1-099.dcm",
+            "1-101.dcm",
+            "1-102.dcm",
+            "1-103.dcm",
+            "1-104.dcm",
+            "1-105.dcm",
+            "1-106.dcm",
+            "1-107.dcm",
+            "1-108.dcm",
+            "1-109.dcm",
+            "1-110.dcm",
+            "1-111.dcm"
+        ]
+    },
+    "statistical_analysis_evaluation": {
+        "information": "This statistical analysis checks for missing slices, DICOM header consistency, and image dimension consistency in a DICOM series. It helps ensure the integrity of the image data and the consistency of the DICOM headers across the series.",
+        "missing_slices": [
+            15,
+            45,
+            91,
+            95
+        ],
+        "dicom_header_consistency": {
+            "missing_headers": {},
+            "inconsistent_headers": {}
+        },
+        "image_dimension_consistency": {
+            "dimensions": {
+                "unique_rows": [
+                    512
+                ],
+                "unique_columns": [
+                    512
+                ],
+                "is_consistent": true
+            },
+            "pixel_spacing": {
+                "unique_values": [
+                    [
+                        0.977,
+                        0.977
+                    ]
+                ],
+                "is_consistent": true,
+                "missing_in_slices": []
+            },
+            "is_consistent": true
+        }
+    },
+    "adversarial_evaluation": {
+        "Dice Coefficient Score": {
+            "original_dice_coefficient_score": 0.6845,
+            "synthetic_dice_coefficient_score": 0.6057,
+            "difference": 0.07879999999999998
+        },
+        "information": "This adversarial evaluation compares segmentation results between original CT slices and synthetically generated ones. The procedure involves: 1) Running lung segmentation on original CT data, 2) Running lung segmentation on synthetic data, 3) Computing differences in segmentation metrics between the two datasets to evaluate how well the synthetic data match the original data by comparing the performance of a SOTA segmentation model on the two datasets."
+    }
+}
